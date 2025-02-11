@@ -1,8 +1,6 @@
 name: Build
 on:
-  push:
-  schedule:
-    - cron: 20 0 * * *
+  push
 jobs:
   build:
     strategy:
@@ -26,7 +24,7 @@ jobs:
           msystem: clang64
           install: mingw-w64-clang-x86_64-clang mingw-w64-clang-aarch64-clang
         - name: macos-universal
-          os: macos-latest
+          os: macos-13
           compiler: clang++
           shell: sh
         - name: linux-universal
@@ -62,7 +60,8 @@ jobs:
     - name: Install macOS Dependencies
       if: runner.os == 'macOS'
       run: |
-        brew install ninja cmake xcbeautify
+        sudo xcode-select -s /Applications/Xcode_14.1.app
+        brew install ninja cmake xcbeautify python@3.10
         rustup toolchain install nightly
         rustup default nightly
         rustup target add x86_64-apple-darwin
