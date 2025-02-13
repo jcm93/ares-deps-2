@@ -28,6 +28,7 @@ librashader_patch() {
 }
 
 librashader_build() {
+  export MACOSX_DEPLOYMENT_TARGET=10.15
   cd librashader
   export RUSTFLAGS=-g
   cargo +nightly run -p librashader-build-script -- --profile ${librashader_profile} --target x86_64-apple-darwin

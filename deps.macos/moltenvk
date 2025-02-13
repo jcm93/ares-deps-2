@@ -1,7 +1,7 @@
 moltenvk_name='MoltenVK'
-moltenvk_version='1.2.11'
+moltenvk_version='1.2.8'
 moltenvk_url='https://github.com/KhronosGroup/MoltenVK.git'
-moltenvk_hash='81541f6488c5feeace53867fc8ab612e578766da'
+moltenvk_hash='1d98babb721c03667f65e7f6197ca2a356d19198'
 
 moltenvk_setup() {
   if [ ! -d "MoltenVK" ]; then
@@ -21,7 +21,11 @@ moltenvk_patch() {
 }
 
 moltenvk_build() {
+  python3.10 -m venv .
+  source bin/activate
+  pip install setuptools
   cd MoltenVK
+  export MACOSX_DEPLOYMENT_TARGET=10.13
   ./fetchDependencies --macos
   xcodebuild build -quiet -project MoltenVKPackaging.xcodeproj -scheme "MoltenVK Package (macOS only)" -configuration ${config} GCC_GENERATE_DEBUGGING_SYMBOLS=TRUE DEBUG_INFORMATION_FORMAT="dwarf-with-dsym"
   cd ..
