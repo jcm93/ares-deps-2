@@ -12,18 +12,11 @@ sdl_setup() {
     git -C SDL fetch
   fi
   git -C SDL reset --hard "$sdl_hash"
+  export MACOSX_DEPLOYMENT_TARGET=10.15
 }
 
 sdl_clean() {
   echo "Todo"
-}
-
-sdl_config() {
-  if [[ "$config" == "RelWithDebInfo" ]]; then
-    CFLAGS='-g'
-  elif [[ "$config" == "Debug" ]]; then
-    CFLAGS='-O0 -g'
-  fi
 }
 
 sdl_patch() {
@@ -44,7 +37,8 @@ sdl_build() {
                    -archivePath "$SCRIPT_DIR/build_temp/SDL/build" \
                    ARCHS="x86_64 arm64" \
                    ONLY_ACTIVE_ARCH=FALSE \
-                   2>&1 | xcbeautify --renderer github-actions
+                   2>&1 | xcbeautify
+
   cd ..
 }
 
