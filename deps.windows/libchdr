@@ -1,0 +1,29 @@
+libchdr_name='libchdr'
+libchdr_url='https://github.com/rtissera/libchdr.git'
+libchdr_hash='cb077337d53392454e7100a0fd07139ca678e527'
+
+## Build Steps
+libchdr_setup() {
+  if [ ! -d "libchdr" ]; then
+    git clone https://github.com/rtissera/libchdr
+  else
+    git -C libchdr fetch
+  fi
+  git -C libchdr reset --hard "$libchdr_hash"
+}
+
+libchdr_clean() {
+  echo "Todo"
+}
+
+libchdr_patch() {
+  echo "No patching to be done"
+}
+
+libchdr_build() {
+  echo "No build of libchdr required"
+}
+
+libchdr_install() {
+  cp -a "build_temp"/libchdr/include/libchdr/ ares-deps/include/libchdr/
+}
