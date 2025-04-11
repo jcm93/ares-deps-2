@@ -1,0 +1,13 @@
+diff --git a/chd-rs-capi/Cargo.toml b/chd-rs-capi/Cargo.toml
+index 709a0a7..d6d3546 100644
+--- a/chd-rs-capi/Cargo.toml
++++ b/chd-rs-capi/Cargo.toml
+@@ -11,7 +11,7 @@ categories = ["emulators", "compression", "encoding"]
+ keywords = ["mame", "chd", "decompression"]
+ 
+ [lib]
+-crate-type = ["staticlib"]
++crate-type = ["cdylib"]
+ 
+ [features]
+ default = []

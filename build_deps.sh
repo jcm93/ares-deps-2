@@ -18,7 +18,9 @@ build_deps() {
   utils_folder="$SCRIPT_DIR/utils.$os"
   for util in "$utils_folder"/*
   do
-    source "$util"
+    if [ ! -d "$util" ]; then
+      source "$util"
+    fi
   done
   
   # add all dependency script files for our platform to this file
@@ -27,8 +29,10 @@ build_deps() {
   dependencies=()
   for dependency in "$deps_folder"/*
   do
-    source "$dependency"
-    dependencies+=("$(basename "$dependency")")
+    if [ ! -d "$dependency" ]; then
+      source "$dependency"
+      dependencies+=("$(basename "$dependency")")
+    fi
   done
   
   mkdir -p "build_temp"

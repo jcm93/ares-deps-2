@@ -20,7 +20,8 @@ chd_rs_clean() {
 
 chd_rs_patch() {
   cd chd-rs
-  echo $'strip = \"debuginfo\"' >> Cargo.toml
+  git apply ../../deps.windows/patch/chd_rs/dylib.patch
+  git diff
   cd ..
 }
 
@@ -42,8 +43,8 @@ chd_rs_install() {
   else
     local targetName=""
   fi
-  cp -R build_temp/chd-rs/target/${targetName}/${chd_rs_profile}/chd_capi.d ares-deps/lib/chd_capi.d
-  cp -R build_temp/chd-rs/target/${targetName}/${chd_rs_profile}/chd_capi.lib ares-deps/lib/chd_capi.lib
+  cp -R build_temp/chd-rs/target/${targetName}/${chd_rs_profile}/chd_capi.dll ares-deps/lib/chd_capi.dll
+  cp -R build_temp/chd-rs/target/${targetName}/${chd_rs_profile}/chd_capi.pdb ares-deps/lib/chd_capi.pdb
+  cp -R build_temp/chd-rs/target/${targetName}/${chd_rs_profile}/chd_capi.dll.exp ares-deps/lib/chd_capi.dllexp
+  cp -R build_temp/chd-rs/target/${targetName}/${chd_rs_profile}/chd_capi.dll.lib ares-deps/lib/chd_capi.lib
 }
-
-
