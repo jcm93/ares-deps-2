@@ -1,0 +1,32 @@
+sparkle_name='Sparkle'
+sparkle_version='2.6.4'
+sparkle_url='https://github.com/sparkle-project/Sparkle/releases/download/2.6.4/Sparkle-2.6.4.tar.xz'
+sparkle_hash='50612a06038abc931f16011d7903b8326a362c1074dabccb718404ce8e585f0b'
+
+## Build Steps
+sparkle_setup() {
+  curl -L -o ${sparkle_name}-${sparkle_version}.tar.xz ${sparkle_url}
+  mkdir ${sparkle_name}-${sparkle_version}
+  tar xf ${sparkle_name}-${sparkle_version}.tar.xz -C ${sparkle_name}-${sparkle_version}
+}
+
+sparkle_clean() {
+  echo "Todo"
+}
+
+sparkle_patch() {
+  echo "No patching to perform"
+}
+
+sparkle_build() {
+  echo "No build to perform"
+}
+
+sparkle_install() {
+  ditto build_temp/${sparkle_name}-${sparkle_version}/Sparkle.framework ares-deps/lib/Sparkle.framework
+  ditto build_temp/${sparkle_name}-${sparkle_version}/Symbols/Sparkle.framework.dSYM ares-deps/lib/Sparkle.framework.dSYM
+  ditto build_temp/${sparkle_name}-${sparkle_version}/LICENSE ares-deps/licenses/Sparkle/LICENSE
+}
+
+
+

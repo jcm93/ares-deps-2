@@ -1,0 +1,43 @@
+winsparkle_name='WinSparkle'
+winsparkle_version='0.9.2'
+winsparkle_url='https://github.com/vslavik/winsparkle/releases/download/v0.9.2/WinSparkle-0.9.2.zip'
+
+## Build Steps
+winsparkle_setup() {
+  curl -L -o ${winsparkle_name}-${winsparkle_version}.zip ${winsparkle_url}
+  mkdir ${winsparkle_name}-${winsparkle_version}
+  unzip ${winsparkle_name}-${winsparkle_version}.zip
+}
+
+winsparkle_clean() {
+  echo "Todo"
+}
+
+winsparkle_patch() {
+  echo "No patching to perform"
+}
+
+winsparkle_build() {
+  echo "No build to perform"
+}
+
+winsparkle_install() {
+  mkdir -p ares-deps/lib
+  mkdir -p ares-deps/include/WinSparkle
+  mkdir -p ares-deps/licenses/WinSparkle
+  arch=''
+  if [[ $envName = windows-arm64 ]]; then
+    arch='ARM64'
+  else
+    arch='x64'
+  fi
+  cp -R build_temp/${winsparkle_name}-${winsparkle_version}/${arch}/Release/WinSparkle.dll ares-deps/lib/WinSparkle.dll
+  cp -R build_temp/${winsparkle_name}-${winsparkle_version}/${arch}/Release/WinSparkle.lib ares-deps/lib/WinSparkle.lib
+  cp -R build_temp/${winsparkle_name}-${winsparkle_version}/${arch}/Release/WinSparkle.pdb ares-deps/lib/WinSparkle.pdb
+  cp -R build_temp/${winsparkle_name}-${winsparkle_version}/COPYING ares-deps/licenses/WinSparkle/COPYING
+  cp -R build_temp/${winsparkle_name}-${winsparkle_version}/include/. ares-deps/include/WinSparkle/
+}
+
+
+
+
