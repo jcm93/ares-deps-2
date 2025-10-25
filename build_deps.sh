@@ -32,7 +32,9 @@ build_deps() {
   done
   
   mkdir -p "build_temp"
+  mkdir -p "ares-deps/src"
   cd "build_temp"
+  pwd > ../ares-deps/sourcemap
   for dependency in "${dependencies[@]}"
   do
     # set up the dependency
@@ -42,13 +44,20 @@ build_deps() {
     # if we have a patch, patch the dependency
     patch_func="${dependency}_patch"
     $patch_func
-    
+
+    # package the source code for debugging
+    patch_func="${dependency}_package_source"
+    $patch_func
+
     # build the dependency
     build_func="${dependency}_build"
     $build_func
   done
   cd ..
-  
+
+  # remove git repository directories for packaged sources
+  find ares-deps/src -type d -name ".git" -exec rm -rf {} +
+
   mkdir -p "ares-deps"
   for dependency in "${dependencies[@]}"
   do
