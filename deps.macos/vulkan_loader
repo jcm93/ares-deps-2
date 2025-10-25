@@ -1,0 +1,49 @@
+vulkan_loader_name='Vulkan-Loader'
+vulkan_loader_version='1.4.328.1'
+vulkan_loader_url='https://github.com/KhronosGroup/Vulkan-Loader.git'
+vulkan_loader_hash='0a278cc725089cb67bf6027076e5d72f97c04d86'
+vulkan_headers_hash='19725e4d48082fe78e26622b15d3080ccd54112b'
+
+vulkan_loader_setup() {
+  if [ ! -d "Vulkan-Loader" ]; then
+    git clone https://github.com/KhronosGroup/Vulkan-Loader.git
+  else
+    git -C Vulkan-Loader fetch
+  fi
+  git -C Vulkan-Loader reset --hard "$vulkan_loader_hash"
+  if [ ! -d "Vulkan-Headers" ]; then
+    git clone https://github.com/KhronosGroup/Vulkan-Headers.git
+  else
+    git -C Vulkan-Headers fetch
+  fi
+  git -C Vulkan-Headers reset --hard "$vulkan_headers_hash"
+  export MACOSX_DEPLOYMENT_TARGET=11.0
+}
+
+vulkan_loader_clean() {
+  echo "Todo"
+}
+
+vulkan_loader_patch() {
+  echo "No patching to perform"
+}
+
+vulkan_loader_build() {
+  cd Vulkan-Headers
+  cmake -S . -B build/
+  cmake --install build --prefix build/install
+  cd ..
+
+  cd Vulkan-Loader
+  mkdir -p build
+  cd build
+  cmake .. -G Xcode -D CMAKE_OSX_ARCHITECTURES="x86_64;arm64" -D UPDATE_DEPS=ON -D VULKAN_HEADERS_INSTALL_DIR='$(pwd)/../../Vulkan-Headers/build/install' -D CMAKE_BUILD_TYPE=RelWithDebInfo -D CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT="dwarf-with-dsym" -D CMAKE_XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS=TRUE
+    xcodebuild -configuration ${config} | 2>&1 xcbeautify
+  cd ..
+  cd ..
+}
+
+vulkan_loader_install() {
+  ditto build_temp/Vulkan-Loader/build/loader/${config} ares-deps/lib/
+}
+

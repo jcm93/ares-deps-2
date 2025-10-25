@@ -1,0 +1,61 @@
+kosmickrisp_name='mesa'
+kosmickrisp_version='25.3'
+kosmickrisp_url='https://gitlab.freedesktop.org/mesa/mesa.git'
+kosmickrisp_hash='74afb200d36d2399a2d158a0f7e3e0c734d56161'
+
+kosmickrisp_setup() {
+  if [ ! -d "mesa" ]; then
+    git clone ${kosmickrisp_url}
+  else
+    git -C mesa fetch
+  fi
+  git -C mesa reset --hard "$kosmickrisp_hash"
+
+  brew install llvm@19 meson python3 libclc spirv-tools
+  python3 -m venv  .
+  source bin/activate
+  python3 -m pip install packaging mako pyyaml
+
+  if [ ! -d "SPIRV-LLVM-Translator" ]; then
+    git clone https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git
+  else
+    git -C SPIRV-LLVM-Translator fetch
+  fi
+  git -C SPIRV-LLVM-Translator checkout llvm_release_190
+  cd SPIRV-LLVM-Translator
+  mkdir build
+  cd build
+  cmake .. -DLLVM_DIR=/opt/homebrew/Cellar/llvm@19/19.1.7/lib/cmake/llvm/
+  make llvm-spirv -j3
+  sudo cmake --install .
+  # ditto build/tools/llvm-spirv/llvm-spirv /opt/homebrew/Cellar/llvm@19/19.1.7/bin/llvm-spirv
+  cd ..
+  cd ..
+
+  export MACOSX_DEPLOYMENT_TARGET=11.0
+}
+
+kosmickrisp_clean() {
+  echo "Todo"
+}
+
+kosmickrisp_patch() {
+  cd mesa
+  echo $'[binaries]' > custom-llvm.ini
+  echo $'llvm-config = \'/opt/homebrew/Cellar/llvm@19/19.1.7/bin/llvm-config\'' >> custom-llvm.ini
+  cd ..
+}
+
+kosmickrisp_build() {
+  cd mesa
+  current_dir=$(pwd)
+  meson setup build --reconfigure --native-file custom-llvm.ini -Dprefix=${current_dir}/../../ares-deps/ -Dvulkan-drivers="kosmickrisp" -Dglx="disabled" -Dopengl="false" -Dgles1="disabled" -Dgles2="disabled" -Dgallium-drivers="" -Dplatforms="macos" -Dbuildtype="release"
+  deactivate
+  cd ..
+}
+
+kosmickrisp_install() {
+  ninja -C build_temp/mesa/build install
+}
+
+
