@@ -42,6 +42,7 @@ moltenvk_install() {
   echo "[MoltenVK] installing"
   ditto build_temp/MoltenVK/Package/Release/MoltenVK/dynamic/dylib/macOS/libMoltenVK.dylib ares-deps/lib/libMoltenVK.dylib
   ditto build_temp/MoltenVK/Package/Release/MoltenVK/dynamic/dylib/macOS/libMoltenVK.dylib.dSYM ares-deps/lib/libMoltenVK.dylib.dSYM
+  ditto build_temp/MoltenVK/Package/Release/MoltenVK/dynamic/dylib/macOS/MoltenVK_ICD.json ares-deps/share/vulkan/icd.d/MoltenVK_ICD.json
   ditto build_temp/MoltenVK/LICENSE ares-deps/licenses/MoltenVK/LICENSE
   echo "[MoltenVK] installing -- success"
 }
